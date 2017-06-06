@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<% include partials/_header %>
+
+<body>
+  <div class="container">
+    <h3> URLs and their shortened forms </h3>
+    <p> List showing shortened forms </p>
+    <ul>
+      <% for (var url in urls) {%>
+        <li><b>Full URL:</b> <%= urls[url] %>
+        <b>Short form:</b><a href="#" target="#"><%= url %> </a>
+        <button type="button">Edit</button>
+        <button type="button">Stats</button>
+        <button type="button">Delete</button> </li>
+      <% } %>
+    </ul>
+
+</body>
+</html>
