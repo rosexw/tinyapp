@@ -14,17 +14,6 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-//find URL
-function findURL(id) {
-  let foundURL;
-  urlDatabase.forEach((url) => {
-    if (url.id == id) {
-      foundURL = url;
-    }
-  });
-  return foundURL;
-};
-
 app.get("/", (req, res) => {
   res.end("<html><body><h1>Welcome to TinyApp: a URL Shortener Tool!</h1></body></html>\n");
 });
@@ -58,24 +47,14 @@ app.get("/u/:shortURL", (req, res) => {
 });
 //creates random shortURL
 app.post("/urls", (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   var shortURL = randomPass();
   res.redirect("/urls/" + shortURL);
 });
 
 //Delete URL
 app.post('/urls/:id/delete', (req, res) => {
-    // find url in database
-    const u = findURL(req.params.id);
-    // if does not exist return a 404
-    if (!u) {
-      res.status(404).send('URL not found.');
-      return;
-    }
-    // remove URL from database
-    const index = urlDatabase.indexOf(u);
-    urlDatabase.splice(index, 1);
-    // redirect to home
+    delete urlDatabase[req.params.id];
     res.redirect('/urls');
 });
 

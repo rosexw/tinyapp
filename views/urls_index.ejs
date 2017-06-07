@@ -8,13 +8,13 @@
     <h3> URLs and their shortened forms </h3>
     <p> List showing shortened forms </p>
     <ul>
-      <% for (var url in urls) { %>
-        <li><b>Full URL:</b> <%= urls[url] %>
-          <b>Short form:</b> <a href="#" target="#"><%= url %> </a>
+      <% for (var key in urls) { %>
+        <li><b>Full URL:</b> <%= urls[key] %>
+          <b>Short form:</b> <a href="#" target="#"><%= [key] %> </a>
           <button type="button">Edit</button>
           <button type="button">Stats</button>
           <!-- make next line on the same line as others?? -->
-          <form action="/urls/<%= urls[url].id %>/delete" method="POST">
+          <form action="/urls/<%= [key] %>/delete" method="POST">
             <input type = "submit" value="Delete" />
           </form>
         </li>
