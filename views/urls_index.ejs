@@ -5,29 +5,41 @@
 
 <body>
   <div class="container">
-    <h3> URLs and their shortened forms </h3>
-    <ul>
-      <% for (var key in urls) { %>
-        <li>Full URL:</b> <a href="<%= urls[key] %>" target="_blank"><%= urls[key] %></a>
-          <br>
-          <b>Short URL:</b> <a href="<%= urls[key] %>" target="_blank"><%= [key] %> </a>
-          <form action="/urls/<%= [key] %>/edit" method="POST">
-            <input type = "submit" value="Edit" />
-          </form>
-          <form action="/urls/<%= [key] %>/stats" method="POST">
-            <input type = "submit" value="Stats" />
-          </form>
-          <!-- make next line on the same line as others?? -->
-          <form action="/urls/<%= [key] %>/delete" method="POST">
-            <input type = "submit" value="Delete" />
-          </form>
-          <br>
-        </li>
-      <% } %>
-      <form action="/urls/<%= [key] %>/add" method="POST">
-        <input type = "submit" value="Add" />
-      </form>
-    </ul>
+    <table class="table">
+      <thead>
+        <th colspan="4"> Full URL </th>
+        <th colspan="4"> Shortened forms </th>
+        <th colspan="2"> Functions </th>
+      </thead>
+      <tbody>
+        <% for (var key in urls) { %>
+        <tr>
+          <!-- Full URL -->
+          <td colspan="4"><a href="<%= urls[key] %>" target="_blank"><%= urls[key] %></a></td>
+          <!-- Short URL -->
+          <td colspan="4"><a href="<%= urls[key] %>" target="_blank"><%= [key] %> </a></td>
+          <td colspan="2">
+            <form action="/urls/<%= [key] %>/edit" method="POST">
+              <input type = "submit" value="Edit" />
+            </form>
+             <form action="/urls/<%= [key] %>/stats" method="POST">
+              <input type = "submit" value="Stats" />
+            </form>
+            <!-- make next line on the same line as others?? -->
+            <form action="/urls/<%= [key] %>/delete" method="POST">
+              <input type = "submit" value="Delete" />
+            </form>
+          </td>
+          </tr>
+        <% } %>
+      <br>
+      <br>
+      <tr>
+        <form action="/urls/<%= [key] %>/add" method="POST">
+          <input type = "submit" value="Add" />
+        </form>
+      </tr>
+    </tbody>
 </div>
 
 </body>

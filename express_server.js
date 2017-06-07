@@ -30,7 +30,6 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  // console.log("/urls/new");
   res.render("urls_new");
 });
 
@@ -70,8 +69,8 @@ app.post("/urls/:id/stats", (req, res) => {
     res.redirect("/urls/" + req.params.id);
 });
 
-//Add URL
-app.post("/urls/:id", (req, res) => {
+//Add URL button redirects to URL New
+app.post("/urls/", (req, res) => {
     res.redirect("/urls/new");
 });
 
