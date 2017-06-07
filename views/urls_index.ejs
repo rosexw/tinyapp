@@ -9,8 +9,8 @@
     <p> List showing shortened forms </p>
     <ul>
       <% for (var key in urls) { %>
-        <li><b>Full URL:</b> <%= urls[key] %>
-          <b>Short form:</b> <a href="#" target="#"><%= [key] %> </a>
+        <li><b>Full URL:</b> <a href="<%= urls[key] %>" target="_blank"><%= urls[key] %></a>
+          <b>Short form:</b> <a href="<%= urls[key] %>" target="_blank"><%= [key] %> </a>
           <button type="button">Edit</button>
           <button type="button">Stats</button>
           <!-- make next line on the same line as others?? -->
