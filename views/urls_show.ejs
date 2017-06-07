@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 
 <%- include('partials/_header') %>
+
 <body>
   <div class="container">
-    <p> Long URL </p>
-        <%= longURL %>
-    <p> Shortened URL </p>
-        <%= shortURL %>
+    <h3>Your Unique Short URL</h3>
+    <p> Shortened URL:  <a href="../u/<%= shortURL %>" target="_blank"> </a> </p>
+    <br>
+    <p> from:  <a href="../u/<%= longURL %>" target="_blank"> </a> </p>
+  </div>
 </body>
 </html>

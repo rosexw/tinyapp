@@ -8,14 +8,19 @@
     <h3> URLs and their shortened forms </h3>
     <p> List showing shortened forms </p>
     <ul>
-      <% for (var url in urls) {%>
+      <% for (var url in urls) { %>
         <li><b>Full URL:</b> <%= urls[url] %>
-        <b>Short form:</b><a href="#" target="#"><%= url %> </a>
-        <button type="button">Edit</button>
-        <button type="button">Stats</button>
-        <button type="button">Delete</button> </li>
+          <b>Short form:</b> <a href="#" target="#"><%= url %> </a>
+          <button type="button">Edit</button>
+          <button type="button">Stats</button>
+          <!-- make next line on the same line as others?? -->
+          <form action="/urls/<%= urls[url].id %>/delete" method="POST">
+            <input type = "submit" value="Delete" />
+          </form>
+        </li>
       <% } %>
     </ul>
+
 
 </body>
 </html>
