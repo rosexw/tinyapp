@@ -4,6 +4,8 @@ var randomPass = require("./random.js");
 var protocolChecker = require("./protocolChecker.js");
 var PORT = process.env.PORT || 8080;
 
+//fix design of everything at the end, once everything is working
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -42,7 +44,7 @@ app.get("/u/:shortURL", (req, res) => {
   if (longURL) {
     res.redirect(longURL);
   } else {
-    res.end("<html><body>URL not found</body></html>\n");
+    res.end('<html><body>URL not found</body></html>\n');
   }
 });
 //creates random shortURL
@@ -52,10 +54,30 @@ app.post("/urls", (req, res) => {
   res.redirect("/urls/" + shortURL);
 });
 
-//Delete URL
-app.post('/urls/:id/delete', (req, res) => {
+//Delete button
+app.post("/urls/:id/delete", (req, res) => {
     delete urlDatabase[req.params.id];
-    res.redirect('/urls');
+    res.redirect("/urls");
+});
+
+//Edit button
+app.post("/urls/:id/edit", (req, res) => {
+    res.redirect("/urls/" + req.params.id);
+});
+
+//Stats button
+app.post("/urls/:id/stats", (req, res) => {
+    res.redirect("/urls/" + req.params.id);
+});
+
+//Add URL
+app.post("/urls/:id", (req, res) => {
+    res.redirect("/urls/new");
+});
+
+//Show Long URL
+app.post("/urls/:id", (req, res) => {
+    urlDatabase[req.params.id];
 });
 
 app.listen(PORT, () => {

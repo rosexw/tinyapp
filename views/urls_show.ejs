@@ -4,10 +4,21 @@
 
 <body>
   <div class="container">
-    <h3>Your Unique Short URL</h3>
-    <p> Shortened URL:  <a href="../u/<%= shortURL %>" target="_blank"><%= shortURL %> </a> </p>
+    <h2> Your Unique Short URL is: <a href="/u/<%= shortURL %>" target="_blank"><%= shortURL %></a> </h2>
     <br>
-    <p> from: <a href="../u/<%= longURL %>" target="_blank"><%= longURL %> </a> </p>
+    <h2> from: <a href="<%= longURL %>" target="_blank"><%= longURL %> </a> </h2>
+    <br>
+    <form action="/urls/<%= shortURL %>/edit" method="POST">
+      <label for="longURL"> New updated URL:</labe>
+      <input id="longURL" type="text" name="longURL" placeholder="<%= longURL %>"/>
+      <input type="submit" value"Update">
+    </form>
+
+    <br>
+    <br>
+
+    <p> <a href="/urls"> ← Return to URL list </a></p>
+    <p> <a href="/">Create another URL! → </a></p>
   </div>
 </body>
 </html>
