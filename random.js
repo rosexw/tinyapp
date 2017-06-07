@@ -1,7 +1,7 @@
 function generateRandomString() {
   var randomString = "";
-  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var stringLength = 6;
+  let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let stringLength = 6;
 
   function pickRandom() {
     return chars[Math.floor(Math.random() * chars.length)];
