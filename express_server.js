@@ -1,5 +1,6 @@
 var express = require("express");
 var app = express();
+var randomPass = require("./random.js");
 var PORT = process.env.PORT || 8080; // default port 8080
 
 app.set("view engine", "ejs");
@@ -47,6 +48,4 @@ app.get("/", (req, res) => {
     console.log(`Server listening on port ${PORT}!`);
 });
 
-// function generateRandomString() {
-//   var
-// }
+randomPass();
