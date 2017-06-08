@@ -1,3 +1,4 @@
+//packages installed and other functions set up
 var express = require("express");
 var app = express();
 var cookieParser = require('cookie-parser')
@@ -7,17 +8,32 @@ var PORT = process.env.PORT || 8080;
 
 //fix design of everything at the end, once everything is working
 
+//body parser, cookie parser - use
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-
 app.set("view engine", "ejs");
 
+//set global variables/objects
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
+
+//APP GET//
 app.get("/", (req, res) => {
   res.end("<html><body><h1>Welcome to TinyApp: a URL Shortener Tool!</h1></body></html>\n");
 });
@@ -60,6 +76,7 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
+//APP POST//
 app.post("/login", (req, res) => {
     res.cookie("email", req.body.email);
     res.redirect("/urls/");
@@ -88,7 +105,6 @@ app.post("/urls/:id/delete", (req, res) => {
     delete urlDatabase[req.params.id];
     res.redirect("/urls");
 });
-
 //Edit button/update
 app.post("/urls/:id/update", (req, res) => {
   var newLongURL = req.body.newLongURL;
@@ -96,23 +112,20 @@ app.post("/urls/:id/update", (req, res) => {
   urlDatabase[req.params.id] = protocolChecker(newLongURL);
   res.redirect("/urls/" + req.params.id);
 });
-
-
 // Stats button
 app.post("/urls/:id/stats", (req, res) => {
     res.redirect("/urls/" + req.params.id);
 });
-
 //Add URL button redirects to URL New
 app.post("/urls/", (req, res) => {
     res.redirect("/urls/new");
 });
-
 //Show Long URL
 app.post("/urls/:id", (req, res) => {
     urlDatabase[req.params.id];
 });
 
+//APP LISTEN//
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}!`);
 });
