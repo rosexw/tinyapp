@@ -11,5 +11,8 @@
     <input id="username" type="text" name="username" placeholder="username"/>
     <input type="submit" value"Submit">
   </form>
+  <% if (username) { %>
+    <h2> Hello, <%= username %>! </h2>
+  <% } %>
   <button type=""> Register </button>
 </header>
