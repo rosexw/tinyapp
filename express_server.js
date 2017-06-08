@@ -49,12 +49,20 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
-// //login
-// app.post("/login", (req, res) => {
-//   //if correct, enter into login page - own urls
-//   //if incorrect, then register or show error, incorrect login
-//     res.redirect("/urls/");
-// });
+app.post("/login", (req, res) => {
+  //if correct, enter into login page - own urls
+  //if incorrect, show error, incorrect login -- later make this better by redirecting user back to login or register
+  //create a register url or button on the login page for user to register
+    let uname = req.body.username;
+    res.cookie("username", uname);
+    console.log(uname);
+    //if (uname==="username"){
+      res.redirect("/urls/");
+    // }
+    // else {
+    //   res.end('<html><body>Username not found, please register or try again.</body></html>\n');
+    // }
+});
 
 //creates random shortURL
 app.post("/urls", (req, res) => {
