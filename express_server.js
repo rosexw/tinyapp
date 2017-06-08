@@ -85,7 +85,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 //APP POST//
 app.post("/login", (req, res) => {
-    res.cookie("email", req.body.username);
+    res.cookie("email", req.body.email);
     res.redirect("/urls/");
 });
 
@@ -95,22 +95,27 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    let email = req.body.username;
+    let email = req.body.email;
     let password = req.body.password;
     let user_id = randomPass(email);
     let user_password = randomPass(password);
-    if (!email || email==="" || !password || password===""){
-      res.status(400).send("Please enter email and/or password.");
-    }
+    var found = false;
     for (var key in users) {
       if (email===users[key].id){
+        found = true;
         res.status(400).send("User already exists!");
       }
     }
-      // console.log(email, password, user_id, user_password);
+    if (!email || !password) {
+      return res.status(400).send("Please enter email and/or password.");
+    } else if (email === 0 || password === 0) {
+      return res.status(400).send("Please enter email and/or password.");
+    } else {
       res.cookie("email", email);
       res.cookie("password", password);
-      res.redirect("/urls/");
+      console.log(password);
+      res.redirect("/urls");
+    }
 });
 
 //creates random shortURL
