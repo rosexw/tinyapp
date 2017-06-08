@@ -3,7 +3,7 @@
 
 function protocolChecker(url) {
 if (((url.substring(0,7)) === 'http://') || ((url.substring(0,8)) === 'https://')) {
-  return;
+  return url;
 } else {
   let correctedURL = (`https://${url}`);
   return correctedURL;

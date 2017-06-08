@@ -73,7 +73,7 @@ app.post("/urls/:id/delete", (req, res) => {
 app.post("/urls/:id/update", (req, res) => {
   var newLongURL = req.body.newLongURL;
   // console.log(newLongURL);
-  urlDatabase[req.params.id] = newLongURL;
+  urlDatabase[req.params.id] = protocolChecker(newLongURL);
   res.redirect("/urls/" + req.params.id);
 });
 
