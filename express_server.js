@@ -1,5 +1,6 @@
 var express = require("express");
 var app = express();
+var cookieParser = require('cookie-parser')
 var randomPass = require("./random.js");
 var protocolChecker = require("./protocolChecker.js");
 var PORT = process.env.PORT || 8080;
@@ -8,6 +9,7 @@ var PORT = process.env.PORT || 8080;
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
@@ -46,6 +48,14 @@ app.get("/u/:shortURL", (req, res) => {
     res.end('<html><body>URL not found</body></html>\n');
   }
 });
+
+// //login
+// app.post("/login", (req, res) => {
+//   //if correct, enter into login page - own urls
+//   //if incorrect, then register or show error, incorrect login
+//     res.redirect("/urls/");
+// });
+
 //creates random shortURL
 app.post("/urls", (req, res) => {
   // console.log(req.body);
@@ -59,12 +69,16 @@ app.post("/urls/:id/delete", (req, res) => {
     res.redirect("/urls");
 });
 
-//Edit button
-app.post("/urls/:id/edit", (req, res) => {
-    res.redirect("/urls/" + req.params.id);
+//Edit button/update
+app.post("/urls/:id/update", (req, res) => {
+  var newLongURL = req.body.newLongURL;
+  // console.log(newLongURL);
+  urlDatabase[req.params.id] = newLongURL;
+  res.redirect("/urls/" + req.params.id);
 });
 
-//Stats button
+
+// Stats button
 app.post("/urls/:id/stats", (req, res) => {
     res.redirect("/urls/" + req.params.id);
 });

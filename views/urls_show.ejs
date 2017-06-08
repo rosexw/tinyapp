@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<%- include('partials/_header') %>
+<%- include("partials/_header") %>
 
 <body>
   <div class="container">
@@ -8,10 +8,10 @@
     <br>
     <h2> from: <a href="<%= longURL %>" target="_blank"><%= longURL %> </a> </h2>
     <br>
-    <form action="/urls/<%= shortURL %>/edit" method="POST">
-      <label for="longURL"> New updated URL:</labe>
-      <input id="longURL" type="text" name="longURL" placeholder="<%= longURL %>"/>
-      <input type="submit" value"Update">
+    <form action="/urls/<%= shortURL %>/update" method="POST">
+      <label for="newLongURL"> New updated URL:</label>
+      <input id="newLongURL" type="text" name="newLongURL" placeholder="<%= longURL %>"/>
+      <input type="submit" value"Submit">
     </form>
 
     <br>
