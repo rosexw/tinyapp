@@ -9,16 +9,26 @@
   <div class="container">
     <h1> TinyApp: URL Shortener </h1>
     <% if (!email) { %>
-      <form action="/login" method="POST">
-        <label for="email"> Please sign in:</label>
-        <input id="email" type="text" name="email" placeholder="email"/>
+    <h2> Please sign in </h2>
+      <form action="/register" method="POST">
+        <label for="username"> Email:</label>
+        <input id="username" type="email" name="email" placeholder="email"/>
+        <br>
+        <br>
+        <label for="password"> Password:</label>
+        <input id="password" type="password" name="password" placeholder="password"/>
+        <br>
+        <br>
+        <br>
         <input type="submit" value="Submit">
-      </form>
-  </div>
-  <div class="container">
-      <button type="button"> <a href="/register"> Register </button>
-  </div>
-  <div class="container">
+        <br>
+        <br>
+      </div>
+      <div class="container">
+          <button type="button"> <a href="/register"> Register </button>
+          <br>
+      </div>
+      <div class="container">
     <% } else { %>
       <h2> Hello, <%= email %>! </h2>
       <form action="/logout" method="POST">

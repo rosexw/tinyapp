@@ -55,7 +55,7 @@ app.get("/urls", (req, res) => {
 
 app.get("/register", (req, res) => {
   let templateVars = {
-    username: req.cookies["email"],
+    email: req.cookies["email"],
     password: req.cookies["password"]
   };
   res.render("register", templateVars);
@@ -66,7 +66,11 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id] };
+  let templateVars = {
+    shortURL: req.params.id,
+    longURL: urlDatabase[req.params.id],
+    email: req.cookies["email"]
+  };
   res.render("urls_show", templateVars);
 });
 //redirect shortURL to long URL
@@ -75,13 +79,13 @@ app.get("/u/:shortURL", (req, res) => {
   if (longURL) {
     res.redirect(longURL);
   } else {
-    res.end('<html><body>URL not found</body></html>\n');
+    res.status(400).send('<html><body>URL not found</body></html>\n');
   }
 });
 
 //APP POST//
 app.post("/login", (req, res) => {
-    res.cookie("email", req.body.email);
+    res.cookie("email", req.body.username);
     res.redirect("/urls/");
 });
 
@@ -91,14 +95,22 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    let email = req.body.email;
+    let email = req.body.username;
     let password = req.body.password;
     let user_id = randomPass(email);
     let user_password = randomPass(password);
-    // console.log(email, password, user_id, user_password);
-    res.cookie("email", email);
-    res.cookie("password", password);
-    res.redirect("/urls/");
+    if (!email || email==="" || !password || password===""){
+      res.status(400).send("Please enter email and/or password.");
+    }
+    for (var key in users) {
+      if (email===users[key].id){
+        res.status(400).send("User already exists!");
+      }
+    }
+      // console.log(email, password, user_id, user_password);
+      res.cookie("email", email);
+      res.cookie("password", password);
+      res.redirect("/urls/");
 });
 
 //creates random shortURL
