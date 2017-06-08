@@ -34,6 +34,9 @@ const users = {
 }
 
 //APP GET//
+//home page - change this in the future to contain login and register buttons
+//and redirect to /login if not signed in, redirect to /urls if signed in
+//if register chosen, redirect to register.ejs
 app.get("/", (req, res) => {
   res.end("<html><body><h1>Welcome to TinyApp: a URL Shortener Tool!</h1></body></html>\n");
 });
@@ -88,8 +91,13 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    res.cookie("email", req.body.email);
-    res.cookie("password", req.body.password)
+    let email = req.body.email;
+    let password = req.body.password;
+    let user_id = randomPass(email);
+    let user_password = randomPass(password);
+    // console.log(email, password, user_id, user_password);
+    res.cookie("email", email);
+    res.cookie("password", password);
     res.redirect("/urls/");
 });
 
