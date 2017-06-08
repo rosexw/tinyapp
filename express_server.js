@@ -29,9 +29,17 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    email: req.cookies["email"]
   };
   res.render("urls_index", templateVars);
+});
+
+app.get("/register", (req, res) => {
+  let templateVars = {
+    username: req.cookies["email"],
+    password: req.cookies["password"]
+  };
+  res.render("register", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
@@ -53,13 +61,18 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-    let uname = req.body.username;
-    res.cookie("username", uname);
+    res.cookie("email", req.body.email);
     res.redirect("/urls/");
 });
 
 app.post("/logout", (req, res) => {
-    res.clearCookie("username");
+    res.clearCookie("email");
+    res.redirect("/urls/");
+});
+
+app.post("/register", (req, res) => {
+    res.cookie("email", req.body.email);
+    res.cookie("password", req.body.password)
     res.redirect("/urls/");
 });
 
