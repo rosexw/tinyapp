@@ -29,7 +29,7 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]    
+    username: req.cookies["username"]
   };
   res.render("urls_index", templateVars);
 });
@@ -53,18 +53,14 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  //if correct, enter into login page - own urls
-  //if incorrect, show error, incorrect login -- later make this better by redirecting user back to login or register
-  //create a register url or button on the login page for user to register
     let uname = req.body.username;
     res.cookie("username", uname);
-    console.log(uname);
-    //if (uname==="username"){
-      res.redirect("/urls/");
-    // }
-    // else {
-    //   res.end('<html><body>Username not found, please register or try again.</body></html>\n');
-    // }
+    res.redirect("/urls/");
+});
+
+app.post("/logout", (req, res) => {
+    res.clearCookie("username");
+    res.redirect("/urls/");
 });
 
 //creates random shortURL
