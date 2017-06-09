@@ -1,7 +1,6 @@
-//packages installed and other functions set up
 var express = require("express");
 var app = express();
-var cookieParser = require('cookie-parser')
+var cookieSession = require('cookie-session')
 var randomPass = require("./random.js");
 var protocolChecker = require("./protocolChecker.js");
 var PORT = process.env.PORT || 8080;
@@ -9,11 +8,12 @@ const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+app.use(cookieSession({
+  name: "session",
+  keys: ["key1", "key2"]
+}));
 app.set("view engine", "ejs");
 
-
-//set global objects
 var urlDatabase = {
   "b2xVn2": {
     URL: "http://www.lighthouselabs.ca",
@@ -43,19 +43,19 @@ var users = {
 }
 
 //APP GET//
-//home page - put header here as well - login and register options
 app.get("/", (req, res) => {
-  res.end("<html><body><h1>Welcome to TinyApp: a URL Shortener Tool!</h1></body></html>\n");
+  let templateVars = {
+    user: users[req.session.user_id]
+  };
+  res.render("home", templateVars);
 });
-
-//maybe a nav bar or side bar once logged in??
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
 app.get("/urls", (req, res) => {
-  let userID = req.cookies["user_id"];
+  let userID = req.session.user_id;
   let templateVars = {
     urls: urlsForUser(userID),
     user: users[userID]
@@ -65,24 +65,24 @@ app.get("/urls", (req, res) => {
 
 app.get("/register", (req, res) => {
   let templateVars = {
-    user: users[req.cookies["user_id"]]
+    user: users[req.session.user_id]
   };
   res.render("register");
 });
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    user: users[req.cookies["user_id"]]
+    user: users[req.session.user_id]
   };
   res.render("login", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   let templateVars = {
-    user: users[req.cookies["user_id"]]
+    user: users[req.session.user_id]
   };
   if (templateVars.user) {
-    res.render("urls_new");
+    res.render("urls_new", templateVars);
   } else {
     res.redirect("/login");
   }
@@ -93,7 +93,7 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlData.URL,
-    user: users[req.cookies["user_id"]],
+    user: users[req.session.user_id],
     urlUserID: urlData.userID
   };
   res.render("urls_show", templateVars);
@@ -118,7 +118,7 @@ app.post("/login", (req, res) =>{
     }
     for (var key in users) {
       if (email === users[key].email && bcrypt.compareSync(password, users[key].password)) {
-        res.cookie("user_id", key);
+        req.session.user_id = key;
         return res.redirect("/urls");
       }
     }
@@ -126,7 +126,7 @@ app.post("/login", (req, res) =>{
 })
 
 app.post("/logout", (req, res) => {
-    res.clearCookie("user_id");
+    req.session.user_id = null;
     res.redirect("/urls");
 });
 
@@ -150,7 +150,7 @@ app.post("/register", (req, res) => {
       email: email,
       password: bcrypt.hashSync(password)
     };
-    res.cookie("user_id", user_id);
+    req.session.user_id = user_id;
     res.redirect("/urls");
 });
 //creates random shortURL
@@ -162,16 +162,16 @@ app.post("/urls", (req, res) => {
 //Delete button
 app.post("/urls/:id/delete", (req, res) => {
   let urlData = urlDatabase[req.params.id];
-  if (req.cookies["user_id"] !== urlData.userID) {
+  if (req.session.user_id !== urlData.userID) {
     return res.status(403).send("Unauthorized to delete this URL.");
   }
-  delete urlData;
+  delete urlDatabase[req.params.id];
   res.redirect("/urls");
 });
 //Edit button/update
 app.post("/urls/:id/update", (req, res) => {
   let urlData = urlDatabase[req.params.id];
-  if (req.cookies["user_id"] !== urlData.userID) {
+  if (req.session.user_id !== urlData.userID) {
     return res.status(403).send("Unauthorized to edit this URL.");
   }
   var newLongURL = req.body.newLongURL;
@@ -182,6 +182,7 @@ app.post("/urls/:id/update", (req, res) => {
 app.post("/urls/", (req, res) => {
     res.redirect("/urls/new");
 });
+
 function urlsForUser (id) {
   let filteredURLS = {};
   for (var key in urlDatabase) {
@@ -192,6 +193,10 @@ function urlsForUser (id) {
   }
   return filteredURLS;
 }
+
+app.post("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
 
 //APP LISTEN//
 app.listen(PORT, () => {
