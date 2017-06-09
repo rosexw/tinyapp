@@ -8,6 +8,7 @@
 
 <body>
   <div class="container">
+    <% if (typeof user !== "undefined" && user.id === urlUserID) { %>
     <h2> Your Unique Short URL is: <a href="/u/<%= shortURL %>" target="_blank"><%= shortURL %></a> </h2>
     <br>
     <h2> from: <a href="<%= longURL %>" target="_blank"><%= longURL %> </a> </h2>
@@ -17,10 +18,11 @@
       <input id="newLongURL" type="text" name="newLongURL" placeholder="<%= longURL %>"/>
       <input type="submit" value"Submit">
     </form>
-
+    <% } else { %>
+      <p> You're not authorized to access this URL </p>
+    <% } %>
     <br>
     <br>
-
     <p> <a href="/urls"> ← Return to URL list </a></p>
     <p> <a href="/">Create another URL! → </a></p>
   </div>

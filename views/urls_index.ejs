@@ -20,9 +20,9 @@
         <% for (var key in urls) { %>
         <tr>
           <!-- Full URL -->
-          <td colspan="4"><a href="<%= urls[key] %>" target="_blank"><%= urls[key] %></a></td>
+          <td colspan="4"><a href="<%= urls[key].URL %>" target="_blank"><%= urls[key].URL %></a></td>
           <!-- Short URL -->
-          <td colspan="4"><a href="<%= urls[key] %>" target="_blank"><%= [key] %> </a></td>
+          <td colspan="4"><a href="<%= urls[key].URL %>" target="_blank"><%= [key] %> </a></td>
           <td colspan="2">
             <a href="/urls/<%= [key] %>" >
               <input type = "submit" value="Edit" />

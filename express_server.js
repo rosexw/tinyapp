@@ -14,13 +14,23 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.set("view engine", "ejs");
 
-//set global variables/objects
+//set global objects
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": {
+    URL: "http://www.lighthouselabs.ca",
+    userID: "userRandomID"
+   },
+  "9sm5xK": {
+    URL: "http://www.google.com",
+    userID: "user2RandomID"
+  },
+  "abcd12": {
+    URL: "http://www.thestar.com",
+    userID: "userRandomID"
+  },
 };
 
-const users = {
+var users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
@@ -46,9 +56,10 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  let userID = req.cookies["user_id"];
   let templateVars = {
-    urls: urlDatabase,
-    user: users[req.cookies["user_id"]]
+    urls: urlsForUser(userID),
+    user: users[userID]
   };
   res.render("urls_index", templateVars);
 });
@@ -71,24 +82,26 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     user: users[req.cookies["user_id"]]
   };
-  //user specific features: if user is not logged in,
-  // res.redirect("/") it says res.redirect("/login") but I think it should give a choice between
-  // login and registration
-  // if ()
-  res.render("urls_new");
+  if (templateVars.user) {
+    res.render("urls_new");
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
+  let urlData = urlDatabase[req.params.id];
   let templateVars = {
     shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id],
-    user: users[req.cookies["user_id"]]
+    longURL: urlData.URL,
+    user: users[req.cookies["user_id"]],
+    urlUserID: urlData.userID
   };
   res.render("urls_show", templateVars);
 });
 //redirect shortURL to long URL
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
+  let longURL = urlDatabase[req.params.shortURL].URL;
   if (longURL) {
     res.redirect(longURL);
   } else {
@@ -107,7 +120,7 @@ app.post("/login", (req, res) =>{
     for (var key in users) {
       if (email === users[key].email && password === users[key].password) {
         res.cookie("user_id", key);
-        return res.redirect("/");
+        return res.redirect("/urls");
       }
     }
     res.status(403).send("Incorrect email and/or password.");
@@ -133,7 +146,6 @@ app.post("/register", (req, res) => {
         return res.status(400).send("User already exists!");
       }
     }
-
     users[user_id] = {
       id: user_id,
       email: email,
@@ -151,28 +163,37 @@ app.post("/urls", (req, res) => {
 
 //Delete button
 app.post("/urls/:id/delete", (req, res) => {
-    delete urlDatabase[req.params.id];
-    res.redirect("/urls");
+  let urlData = urlDatabase[req.params.id];
+  if (req.cookies["user_id"] !== urlData.userID) {
+    return res.status(403).send("Unauthorized to delete this URL.");
+  }
+  delete urlData;
+  res.redirect("/urls");
 });
 //Edit button/update
 app.post("/urls/:id/update", (req, res) => {
+  let urlData = urlDatabase[req.params.id];
+  if (req.cookies["user_id"] !== urlData.userID) {
+    return res.status(403).send("Unauthorized to edit this URL.");
+  }
   var newLongURL = req.body.newLongURL;
-  // console.log(newLongURL);
-  urlDatabase[req.params.id] = protocolChecker(newLongURL);
+  urlData.URL = protocolChecker(newLongURL);
   res.redirect("/urls/" + req.params.id);
-});
-// Stats button
-app.post("/urls/:id/stats", (req, res) => {
-    res.redirect("/urls/" + req.params.id);
 });
 //Add URL button redirects to URL New
 app.post("/urls/", (req, res) => {
     res.redirect("/urls/new");
 });
-//Show Long URL
-app.post("/urls/:id", (req, res) => {
-    urlDatabase[req.params.id];
-});
+function urlsForUser (id) {
+  let filteredURLS = {};
+  for (var key in urlDatabase) {
+    let urlData = urlDatabase[key];
+    if (id === urlData.userID) {
+      filteredURLS[key] = urlData;
+    }
+  }
+  return filteredURLS;
+}
 
 //APP LISTEN//
 app.listen(PORT, () => {
