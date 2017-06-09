@@ -5,14 +5,13 @@ var cookieParser = require('cookie-parser')
 var randomPass = require("./random.js");
 var protocolChecker = require("./protocolChecker.js");
 var PORT = process.env.PORT || 8080;
-
-//fix design of everything at the end, once everything is working
-
-//body parser, cookie parser - use
+const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require("body-parser");
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.set("view engine", "ejs");
+
 
 //set global objects
 var urlDatabase = {
@@ -34,12 +33,12 @@ var users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "test1"
+    password: bcrypt.hashSync("test1")
   },
  "user2RandomID": {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "test2"
+    password: bcrypt.hashSync("test2")
   }
 }
 
@@ -118,7 +117,7 @@ app.post("/login", (req, res) =>{
       return res.status(400).send("Please enter email and/or password.");
     }
     for (var key in users) {
-      if (email === users[key].email && password === users[key].password) {
+      if (email === users[key].email && bcrypt.compareSync(password, users[key].password)) {
         res.cookie("user_id", key);
         return res.redirect("/urls");
       }
@@ -149,9 +148,8 @@ app.post("/register", (req, res) => {
     users[user_id] = {
       id: user_id,
       email: email,
-      password: password
+      password: bcrypt.hashSync(password)
     };
-    console.log(users);
     res.cookie("user_id", user_id);
     res.redirect("/urls");
 });
