@@ -24,20 +24,22 @@ const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: "test1"
   },
  "user2RandomID": {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk"
+    password: "test2"
   }
 }
 
 //APP GET//
-//home page - put header here as well
+//home page - put header here as well - login and register options
 app.get("/", (req, res) => {
   res.end("<html><body><h1>Welcome to TinyApp: a URL Shortener Tool!</h1></body></html>\n");
 });
+
+//maybe a nav bar or side bar once logged in??
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -69,6 +71,10 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     user: users[req.cookies["user_id"]]
   };
+  //user specific features: if user is not logged in,
+  // res.redirect("/") it says res.redirect("/login") but I think it should give a choice between
+  // login and registration
+  // if ()
   res.render("urls_new");
 });
 
