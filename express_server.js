@@ -7,6 +7,8 @@ var PORT = process.env.PORT || 8080;
 const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require("body-parser");
 
+//stretch - method override - not doing that at this moment
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
   name: "session",
@@ -117,6 +119,10 @@ app.get("/u/:shortURL", (req, res) => {
     res.status(400).send('<html><body>URL not found</body></html>\n');
   }
 });
+
+//stretch - keep track of how many times a given short URL is visited
+//and display it on the edit page for the URL
+//plan is to make a counter
 
 //APP POST//
 app.post("/login", (req, res) =>{
