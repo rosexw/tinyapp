@@ -54,11 +54,21 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
+  // BUG: Don't need any of these variables or to push users
+  // let templateVars = {
+  //   email: req.cookies["email"],
+  //   password: req.cookies["password"]
+  //
+  // };
+  res.render("register");
+});
+
+app.get("/login", (req, res) => {
   let templateVars = {
     email: req.cookies["email"],
     password: req.cookies["password"]
   };
-  res.render("register", templateVars);
+  res.render("login", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
@@ -98,29 +108,41 @@ app.post("/register", (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
     let user_id = randomPass(email);
-    let user_password = randomPass(password);
-    var found = false;
-    for (var key in users) {
-      if (email===users[key].id){
-        found = true;
-        res.status(400).send("User already exists!");
-      }
-    }
+
     if (!email || !password) {
       return res.status(400).send("Please enter email and/or password.");
-    } else if (email === 0 || password === 0) {
-      return res.status(400).send("Please enter email and/or password.");
-    } else {
-      res.cookie("email", email);
-      res.cookie("password", password);
-      console.log(password);
-      res.redirect("/urls");
     }
+
+    // Checking if user with already exists
+    for (var key in users) {
+      if (email === users[key].email){
+        return res.status(400).send("User already exists!");
+      }
+    }
+
+    users[user_id] = {
+      id: user_id,
+      email: email,
+      password: password
+    };
+    console.log(users);
+    res.cookie("user_id", user_id);
+    res.redirect("/urls");
 });
+app.post("/login", (req, res) =>{
+    let email = req.body.email;
+    let password = req.body.password;
+
+    if (!email || !password) {
+      return res.status(400).send("Please enter email and/or password.");
+    }
+    res.cookie("email", email);
+    res.cookie("password", password);
+    res.redirect("/urls");
+})
 
 //creates random shortURL
 app.post("/urls", (req, res) => {
-  // console.log(req.body);
   var shortURL = randomPass();
   res.redirect("/urls/" + shortURL);
 });
