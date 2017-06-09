@@ -1,40 +1,14 @@
-<!DOCTYPE html>
 
-<html lang="en">
-<head>
-  <link rel="stylesheet" href="/style.css">
-  <title> TinyApp: URL Shortener </title>
-</head>
-
-<!DOCTYPE html>
-<html lang="en">
 <header>
   <div class="container">
     <h1> TinyApp: URL Shortener </h1>
-    <% if (!email) { %>
-    <h2> Please sign in </h2>
-      <form action="/login" method="POST">
-        <label for="email"> Email:</label>
-        <input id="email" type="email" name="email" placeholder="email"/>
-        <br>
-        <br>
-        <label for="password"> Password:</label>
-        <input id="password" type="password" name="password" placeholder="password"/>
-        <br>
-        <br>
-        <input type="submit" value="Submit">
-        <br>
-        <br>
-      </div>
-      <div class="container">
-          <button type="button"> <a href="/register"> Register </button>
-          <br>
-      </div>
-      <div class="container">
+    <% if (typeof user == 'undefined') { %>
+      <a href="/register"> Register </a>
+      <a href="/login"> Log in </a>
     <% } else { %>
-      <h2> Hello, <%= email %>! </h2>
+      <h2> Hello, <%= user.email %>! </h2>
       <form action="/logout" method="POST">
-        <input type="submit" value="Logout">
+        <input type="submit" value="Log out">
       </form>
     <% } %>
   </div>

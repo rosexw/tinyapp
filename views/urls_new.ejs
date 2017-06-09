@@ -1,13 +1,20 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/style.css">
+  <title>TinyApp: URL Shortener</title>
+</head>
 <%- include("partials/_header") %>
 
-<html lang="en">
-  <body style="font-size:20px; padding:50px;">
-    <div class="container">
-      <form action="/urls" method="POST" style="margin:150px;">
-        <label for="longURL">Enter a URL:</label>
-        <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
-        <input type="submit" value="Submit">
-      </form>
-    </div>
-  </body>
+
+<body style="font-size:20px; padding:50px;">
+  <div class="container">
+    <form action="/urls" method="POST" style="margin:150px;">
+      <label for="longURL">Enter a URL:</label>
+      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+</body>
+
+</html>

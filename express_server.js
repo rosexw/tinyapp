@@ -34,9 +34,7 @@ const users = {
 }
 
 //APP GET//
-//home page - change this in the future to contain login and register buttons
-//and redirect to /login if not signed in, redirect to /urls if signed in
-//if register chosen, redirect to register.ejs
+//home page - put header here as well
 app.get("/", (req, res) => {
   res.end("<html><body><h1>Welcome to TinyApp: a URL Shortener Tool!</h1></body></html>\n");
 });
@@ -48,30 +46,29 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    email: req.cookies["email"]
+    user: users[req.cookies["user_id"]]
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/register", (req, res) => {
-  // BUG: Don't need any of these variables or to push users
-  // let templateVars = {
-  //   email: req.cookies["email"],
-  //   password: req.cookies["password"]
-  //
-  // };
+  let templateVars = {
+    user: users[req.cookies["user_id"]]
+  };
   res.render("register");
 });
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    email: req.cookies["email"],
-    password: req.cookies["password"]
+    user: users[req.cookies["user_id"]]
   };
   res.render("login", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
+  let templateVars = {
+    user: users[req.cookies["user_id"]]
+  };
   res.render("urls_new");
 });
 
@@ -79,7 +76,7 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id],
-    email: req.cookies["email"]
+    user: users[req.cookies["user_id"]]
   };
   res.render("urls_show", templateVars);
 });
@@ -94,14 +91,25 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 //APP POST//
-app.post("/login", (req, res) => {
-    res.cookie("email", req.body.email);
-    res.redirect("/urls/");
-});
+app.post("/login", (req, res) =>{
+    let email = req.body.email;
+    let password = req.body.password;
+
+    if (!email || !password) {
+      return res.status(400).send("Please enter email and/or password.");
+    }
+    for (var key in users) {
+      if (email === users[key].email && password === users[key].password) {
+        res.cookie("user_id", key);
+        return res.redirect("/urls");
+      }
+    }
+    res.status(401).send("Incorrect username and/or password.");
+})
 
 app.post("/logout", (req, res) => {
-    res.clearCookie("email");
-    res.redirect("/urls/");
+    res.clearCookie("user_id");
+    res.redirect("/urls");
 });
 
 app.post("/register", (req, res) => {
@@ -115,7 +123,7 @@ app.post("/register", (req, res) => {
 
     // Checking if user with already exists
     for (var key in users) {
-      if (email === users[key].email){
+      if (email === users[key].email) {
         return res.status(400).send("User already exists!");
       }
     }
@@ -129,18 +137,6 @@ app.post("/register", (req, res) => {
     res.cookie("user_id", user_id);
     res.redirect("/urls");
 });
-app.post("/login", (req, res) =>{
-    let email = req.body.email;
-    let password = req.body.password;
-
-    if (!email || !password) {
-      return res.status(400).send("Please enter email and/or password.");
-    }
-    res.cookie("email", email);
-    res.cookie("password", password);
-    res.redirect("/urls");
-})
-
 //creates random shortURL
 app.post("/urls", (req, res) => {
   var shortURL = randomPass();
