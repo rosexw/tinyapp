@@ -43,6 +43,12 @@ var users = {
 }
 
 //APP GET//
+//this is a welcome page, where users can choose to login or register.
+//But I noticed in the requirements, that it needs to have an if statement.
+//If the user is on the / page and is not logged in, then they should log in, redirect to login.
+//and if they are logged in, they should go to the urls page.
+//however, I disagree with this, and think that the / should be the welcome page.
+//that way, if the user doesn't have an account, they need to register first, not login!
 app.get("/", (req, res) => {
   let templateVars = {
     user: users[req.session.user_id]
@@ -72,9 +78,13 @@ app.get("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    user: users[req.session.user_id]
-  };
-  res.render("login", templateVars);
+      user: users[req.session.user_id]
+    }
+  if (templateVars.user) {
+      res.redirect("/urls");
+    } else {
+      res.render("login");
+    }
 });
 
 app.get("/urls/new", (req, res) => {
