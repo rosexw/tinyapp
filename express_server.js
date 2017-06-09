@@ -101,10 +101,10 @@ app.post("/login", (req, res) =>{
     for (var key in users) {
       if (email === users[key].email && password === users[key].password) {
         res.cookie("user_id", key);
-        return res.redirect("/urls");
+        return res.redirect("/");
       }
     }
-    res.status(401).send("Incorrect username and/or password.");
+    res.status(403).send("Incorrect email and/or password.");
 })
 
 app.post("/logout", (req, res) => {
