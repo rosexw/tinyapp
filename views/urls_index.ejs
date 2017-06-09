@@ -8,14 +8,15 @@
 
 <body>
   <div class="container">
+    <% if (typeof user === "undefined") { %>
+      <p>You must be logged in to view this page</p>
+    <% } else { %>
     <table class="table">
       <thead>
         <th colspan="4"> Full URL </th>
         <th colspan="4"> Shortened forms </th>
         <th colspan="2"> Functions </th>
       </thead>
-    </div>
-    <div class="container">
       <tbody>
         <% for (var key in urls) { %>
         <tr>
@@ -32,7 +33,7 @@
               <input type = "submit" value="Delete" />
             </form>
           </td>
-          </tr>
+        </tr>
         <% } %>
       <br>
       <br>
@@ -42,6 +43,8 @@
         </form>
       </tr>
     </tbody>
+  </table>
+  <% } %>
 </div>
 
 </body>
