@@ -1,9 +1,9 @@
-var express = require("express");
-var app = express();
-var cookieSession = require('cookie-session')
-var randomPass = require("./random.js");
-var protocolChecker = require("./protocolChecker.js");
-var PORT = process.env.PORT || 8080;
+const express = require("express");
+const app = express();
+const cookieSession = require('cookie-session')
+const randomPass = require("./random.js");
+const protocolChecker = require("./protocolChecker.js");
+const PORT = process.env.PORT || 8080;
 const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require("body-parser");
 
@@ -16,7 +16,7 @@ app.use(cookieSession({
 }));
 app.set("view engine", "ejs");
 
-var urlDatabase = {
+let urlDatabase = {
   "b2xVn2": {
     URL: "http://www.lighthouselabs.ca",
     userID: "userRandomID"
@@ -31,7 +31,7 @@ var urlDatabase = {
   },
 };
 
-var users = {
+let users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
@@ -132,7 +132,7 @@ app.post("/login", (req, res) =>{
     if (!email || !password) {
       return res.status(400).send("Please enter email and/or password.");
     }
-    for (var key in users) {
+    for (let key in users) {
       if (email === users[key].email && bcrypt.compareSync(password, users[key].password)) {
         req.session.user_id = key;
         return res.redirect("/urls");
@@ -156,7 +156,7 @@ app.post("/register", (req, res) => {
     }
 
     // Checking if user with already exists
-    for (var key in users) {
+    for (let key in users) {
       if (email === users[key].email) {
         return res.status(400).send("User already exists!");
       }
@@ -171,7 +171,7 @@ app.post("/register", (req, res) => {
 });
 //creates random shortURL
 app.post("/urls", (req, res) => {
-  var shortURL = randomPass();
+  let shortURL = randomPass();
   res.redirect("/urls/" + shortURL);
 });
 
@@ -190,18 +190,23 @@ app.post("/urls/:id/update", (req, res) => {
   if (req.session.user_id !== urlData.userID) {
     return res.status(403).send("Unauthorized to edit this URL.");
   }
-  var newLongURL = req.body.newLongURL;
+  let newLongURL = req.body.newLongURL;
   urlData.URL = protocolChecker(newLongURL);
   res.redirect("/urls/" + req.params.id);
 });
 //Add URL button redirects to URL New
-app.post("/urls/", (req, res) => {
-    res.redirect("/urls/new");
+app.post("/urls/new", (req, res) => {
+  let shortURL = randomPass();
+  urlDatabase[shortURL] = {
+    URL: protocolChecker(req.body.longURL),
+    userID: req.session.user_id
+  }
+  res.redirect("/urls");
 });
 
 function urlsForUser (id) {
   let filteredURLS = {};
-  for (var key in urlDatabase) {
+  for (let key in urlDatabase) {
     let urlData = urlDatabase[key];
     if (id === urlData.userID) {
       filteredURLS[key] = urlData;
