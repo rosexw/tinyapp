@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const cookieSession = require('cookie-session')
+const cookieSession = require('cookie-session');
 const randomPass = require("./random.js");
 const protocolChecker = require("./protocolChecker.js");
 const PORT = process.env.PORT || 8080;
